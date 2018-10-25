@@ -1,28 +1,29 @@
 {
-  "name": "systemic-mssql",
-  "version": "1.0.0",
-  "description": "A systemic SQL Server component",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [
-    "systemic",
-    "mssql",
-    "sql server"
-  ],
-  "author": "GuideSmiths Ltd",
-  "license": "ISC",
-  "dependencies": {
-    "mssql": "^4.2.2"
-  },
-  "devDependencies": {},
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/guidesmiths/systemic-mssql.git"
-  },
-  "bugs": {
-    "url": "https://github.com/guidesmiths/systemic-mssql/issues"
-  },
-  "homepage": "https://github.com/guidesmiths/systemic-mssql#readme"
+	"name": "systemic-mssql",
+	"version": "1.0.0",
+	"description": "A systemic SQL Server component",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [
+		"systemic",
+		"mssql",
+		"sql server"
+	],
+	"author": "GuideSmiths Ltd",
+	"license": "ISC",
+	"dependencies": {
+		"mssql": "^4.2.2",
+		"debug": "^4.1.0"
+	},
+	"devDependencies": {},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/guidesmiths/systemic-mssql.git"
+	},
+	"bugs": {
+		"url": "https://github.com/guidesmiths/systemic-mssql/issues"
+	},
+	"homepage": "https://github.com/guidesmiths/systemic-mssql#readme"
 }
