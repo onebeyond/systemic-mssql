@@ -92,13 +92,19 @@ module.exports = config => {
 	};
 
 	const initApi = pool => {
-		const queries = loadSql(config.queriesDir);
-		const manager = manageStatements(queries, pool);
-		const execute = executor(manager);
+		if (config.queriesDir) {
+			const queries = loadSql(config.queriesDir);
+			const manager = manageStatements(queries, pool);
+			const execute = executor(manager);
+			return {
+				transaction: transaction(pool),
+				pool,
+				execute,
+			};
+		}
 		return {
 			transaction: transaction(pool),
 			pool,
-			execute,
 		};
 	};
 
