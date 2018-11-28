@@ -5,11 +5,29 @@ const fs = require('fs');
 const { join, parse } = require('path');
 
 module.exports = config => {
-	const start = () => {
+	const connectionPool = new sql.ConnectionPool({ ...config.db });
+
+	function timeout(ms) {
+		return new Promise(resolve => setTimeout(resolve, ms));
+	}
+
+	const start = async () => {
 		debug('Initializing systemic-mssql');
-		return sql.connect({ ...config.db }).then(pool => initApi(pool));
+		let retries = config.retries || 10;
+		while ((connection = await startConnection(config)) === 'nok' && retries-- > 0) {
+			await timeout(2500);
+		}
+		return connection;
 	};
 
+	const startConnection = () =>
+		connectionPool
+			.connect()
+			.then(pool => initApi(pool))
+			.catch(err => {
+				console.log(err);
+				return 'nok';
+			});
 	const executeQuery = (transaction, strings, values) => transaction.request().query(strings, ...values);
 
 	const transaction = pool => queries => {
