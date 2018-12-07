@@ -41,7 +41,6 @@ module.exports = config => {
 			})
 			.then(() => transaction.commit())
 			.catch(err => {
-				transaction.rollback();
 				throw err;
 			});
 	};
