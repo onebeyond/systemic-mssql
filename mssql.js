@@ -4,12 +4,10 @@ const { sequential } = require('./lib/common');
 const fs = require('fs');
 const { join, parse } = require('path');
 
-module.exports = config => {
+module.exports = ({ logger, config }) => {
 	const connectionPool = new sql.ConnectionPool({ ...config.db });
 
-	function timeout(ms) {
-		return new Promise(resolve => setTimeout(resolve, ms));
-	}
+	const timeout = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 	const start = async () => {
 		debug('Initializing systemic-mssql');
@@ -25,13 +23,17 @@ module.exports = config => {
 			.connect()
 			.then(pool => initApi(pool))
 			.catch(err => {
-				console.log(err);
+				logger.error(err);
 				return 'nok';
 			});
 
-	const executeQuery = (transaction, strings, values) => transaction.request().query(strings, ...values);
+	const executeQuery = (transaction, strings, values) => {
+		debug('Executing query');
+		return transaction.request().query(strings, ...values);
+	};
 
 	const transaction = pool => queries => {
+		debug('Executing transaction');
 		let transaction;
 		return pool
 			.transaction()
@@ -49,6 +51,7 @@ module.exports = config => {
 	const readFile = (dir, fileName) => fs.readFileSync(join(dir, fileName)).toString();
 
 	const loadSql = location => {
+		debug(`Loading SQL files from ${location}`);
 		const fileNames = fs.readdirSync(location);
 		return fileNames
 			.filter(file => parse(file).ext === '.sql')
@@ -56,6 +59,7 @@ module.exports = config => {
 	};
 
 	const initStatements = (query, pool, connectionsPerQuery) => {
+		debug(`Initializing statements for query ${query}`);
 		const statements = [];
 
 		for (let i = 0; i < connectionsPerQuery; i++) {

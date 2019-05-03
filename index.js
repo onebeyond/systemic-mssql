@@ -3,7 +3,7 @@ const mssql = require('./mssql');
 module.exports = () => {
 	let db;
 	const start = ({ logger, config }, cb) => {
-		mssql(config)
+		mssql({ logger, config })
 			.start()
 			.then(_db => {
 				db = _db;
