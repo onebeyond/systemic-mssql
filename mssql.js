@@ -113,6 +113,11 @@ module.exports = ({ logger, config }) => {
 			});
 	};
 
+	const health = pool => () => {
+		debug('Checking DB health');
+		return pool.request().query('select 1');
+	};
+
 	const initApi = pool => {
 		if (config.queriesDir) {
 			const queries = loadSql(config.queriesDir);
@@ -126,6 +131,7 @@ module.exports = ({ logger, config }) => {
 		}
 		return {
 			transaction: transaction(pool),
+			health: health(pool),
 			pool,
 		};
 	};
