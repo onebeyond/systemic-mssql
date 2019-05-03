@@ -14,9 +14,9 @@ module.exports = config => {
 	const start = async () => {
 		debug('Initializing systemic-mssql');
 		let retries = config.retries || 10;
-		while ((connection = await startConnection(config)) === 'nok' && retries-- > 0) {
-			await timeout(2500);
-		}
+		let connection;
+		while ((connection = await startConnection()) === 'nok' && retries-- > 0) await timeout(2500);
+		if (connection === 'nok') throw new Error('Unable to connect to DB');
 		return connection;
 	};
 
@@ -28,6 +28,7 @@ module.exports = config => {
 				console.log(err);
 				return 'nok';
 			});
+
 	const executeQuery = (transaction, strings, values) => transaction.request().query(strings, ...values);
 
 	const transaction = pool => queries => {
