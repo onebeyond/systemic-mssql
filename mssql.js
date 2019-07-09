@@ -114,8 +114,22 @@ module.exports = ({ logger, config }) => {
 	};
 
 	const health = pool => () => {
-		debug('Checking DB health');
-		return pool.request().query('select 1');
+		const start = process.hrtime();
+		return pool.request().query('select 1')
+			.then(() => {
+				debug('Healthcheck ok')
+				return {
+					status: 'ok',
+					response_time_ms: process.hrtime(start)[1] / 1000000,
+				};
+			})
+			.catch(err => {
+				debug(`Healthcheck error: ${err.message}`)
+				return {
+					status: 'error',
+					details: err.message,
+				}
+			})
 	};
 
 	const initApi = pool => {
